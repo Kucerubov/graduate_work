@@ -3,7 +3,6 @@ const tokenService = require('../service/token-service');
 
 function authMiddleware(role) {
     return function (req, res, next) {
-        console.log(req);
         try {
             const authorizationHeader = req.headers.authorization;
             if (!authorizationHeader) {
@@ -11,6 +10,7 @@ function authMiddleware(role) {
             }
 
             const accessToken = authorizationHeader.split(' ')[1];
+            console.log(accessToken);
             if (!accessToken) {
                 return next(ApiError.UnauthorizedError());
             }

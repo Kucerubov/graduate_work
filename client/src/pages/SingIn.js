@@ -12,7 +12,6 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { REGISTRATION_ROUTE, SHOP_ROUTE } from "../utils/consts";
 import {Link, useNavigate} from "react-router-dom";
 import { Context } from "../index";
-import NavBar from "../component/NavBar";
 import {observer} from "mobx-react-lite";
 
 const theme = createTheme();

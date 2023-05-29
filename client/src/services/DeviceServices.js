@@ -12,6 +12,11 @@ const DeviceServices = (function () {
             resolve(requestSend('GET', `/device/${id}`, null));
         })
     };
+    DeviceServices.addDevice = function (name, price, videoId, brandId, typeId, img, info) {
+        return new Promise((resolve) => {
+            resolve(requestSend('POST', `/device`, {name: name, price: price, brandId: brandId, typeId: typeId, info: JSON.stringify(info), img: img}, true));
+        })
+    };
     return DeviceServices;
 
 }());

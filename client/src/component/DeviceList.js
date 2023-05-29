@@ -3,24 +3,12 @@ import Divider from "@mui/material/Divider";
 import Stack from "@mui/material/Stack";
 import { Context } from "../index";
 import DeviceItem from "./DeviceItem";
-import {useLocation} from "react-router-dom";
+import {observer} from "mobx-react-lite";
 
-export default function DeviceList() {
+function DeviceList() {
     const { deviceStore } = useContext(Context);
-    const [isLoading, setIsLoading] = useState(true);
-    const [itemsPerRow, setItemsPerRow] = useState(4); // количество элементов в строке
-    const location = useLocation();
-    const isHome = location.pathname === '/';
+    const [itemsPerRow, setItemsPerRow] = useState(3); // количество элементов в строке
 
-    useEffect(() => {
-        if(isHome){
-            const fetchData = async () => {
-                await deviceStore.getDevices();
-                setIsLoading(false);
-            };
-            fetchData();
-        }
-    }, [deviceStore]);
 
     useEffect(() => {
         const handleResize = () => {
@@ -40,12 +28,8 @@ export default function DeviceList() {
         return () => window.removeEventListener("resize", handleResize);
     }, []);
 
-    if (isLoading) {
-        return <div>Loading...</div>;
-    }
 
-
-    const groupedDevices = deviceStore.devices.rows.reduce(
+    const groupedDevices = deviceStore.devices?.rows.reduce(
         (resultArray, item, index) => {
             const chunkIndex = Math.floor(index / itemsPerRow);
 
@@ -60,7 +44,7 @@ export default function DeviceList() {
 
     return (
         <div sx={{ mt: 2, mb: 2 }}>
-            {groupedDevices.map((group, index) => (
+            {groupedDevices?.map((group, index) => (
                 <Stack
                     key={index}
                     direction="row"
@@ -76,3 +60,5 @@ export default function DeviceList() {
         </div>
     );
 }
+
+export default observer(DeviceList);

@@ -1,5 +1,7 @@
 import AuthService from "../services/AuthService";
 import {makeAutoObservable} from "mobx";
+import BasketServices from "../services/BasketServices";
+import OtherService from "../services/OtherService";
 
 export default class Store {
 
@@ -10,6 +12,8 @@ export default class Store {
     user = {};
     isAuth = false;
 
+    basket;
+
     setUser(user) {
         this.user = user;
         console.log(user);
@@ -19,12 +23,17 @@ export default class Store {
         this.isAuth = auth;
     }
 
+    setBasket(basket){
+        this.basket = basket;
+    }
+
 
     async login(email, password){
         const response = await AuthService.login(email, password);
         console.log(response);
         localStorage.setItem('token', response.accessToken);
         this.setUser(response.user);
+        this.setBasket(response.basket.id);
         this.setAuth(response.user.isActivated);
     }
 
@@ -34,7 +43,9 @@ export default class Store {
             console.log(response);
             localStorage.setItem('token', response.accessToken);
             this.setUser(response.user);
+            this.setBasket(response.basket.id);
             this.setAuth(response.user.isActivated);
+            return response;
         } catch (e){
             console.log(e);
         }
@@ -47,6 +58,7 @@ export default class Store {
             localStorage.removeItem('token');
             this.setUser({});
             this.setAuth(false);
+            this.setBasket({});
         } catch (e){
             console.log(e);
         }
@@ -57,8 +69,28 @@ export default class Store {
             const response = await AuthService.checkAuthentication();
             localStorage.setItem('token', response.accessToken);
             this.setUser(response.user);
+            this.setBasket(response.basket.id);
             this.setAuth(response.user.isActivated);
         }catch (e) {
+            console.log(e);
+        }
+    }
+
+    async openBasket () {
+        try {
+            const response = await BasketServices.Basket(this.basket);
+            console.log(response);
+        }catch (e) {
+            console.log(e);
+        }
+    }
+
+    async addTypeBrand(marker, name) {
+        try {
+            const response = await OtherService.addTypeBrand(marker, name);
+            console.log(response);
+            return response;
+        }catch (e){
             console.log(e);
         }
     }

@@ -1,4 +1,4 @@
-const {User, Basket} = require('../models/models');
+const {User, Basket, Token} = require('../models/models');
 const bcrypt = require('bcrypt');
 const uuid = require('uuid');
 const mailServices = require('./mail-service');
@@ -18,16 +18,13 @@ class UserService {
         }
         const hashPassword = await bcrypt.hash(password, 3);
         const activationLink = uuid.v4();
-        console.log(activationLink);
 
         const user = await User.create({userName, email, password: hashPassword, activationLink, role})
         const basket = await Basket.create({userId: user.id});
         await mailServices.sendActivationMail(email, `http://localhost:5000/api/activate/${activationLink}`);
         const userDto = new UserDto(user); // id, email, isActivated, role
-        console.log(userDto);
         const tokens = tokenService.generateTokens({...userDto});
         await tokenService.saveToken(userDto.id, tokens.refreshToken);
-
 
         return {
             ...tokens,
@@ -46,15 +43,17 @@ class UserService {
 
     async login(email, password) {
         const user = await User.findOne({where: {email}});
+
         if(!user){
             throw ApiError.BadRequest("Пользователь с таким email не зарегистрирован!")
         }
         const isPassEquals = await bcrypt.compare(password, user.password);
+
         if(!isPassEquals) {
             throw ApiError.BadRequest('Неверный логин или пароль');
         }
-        const basket = await Basket.findOne({where: user.id});
-        console.log(basket);
+
+        const basket = await Basket.findOne({userId: user.id});
         const userDto = new UserDto(user);
         const tokens = tokenService.generateTokens({...userDto});
         await tokenService.saveToken(userDto.id, tokens.refreshToken);
@@ -78,20 +77,20 @@ class UserService {
         const tokenFromDb = await tokenService.findToken(refreshToken);
         if(!userData || !tokenFromDb) {
             throw ApiError.UnauthorizedError();
+        }else {
+            await tokenService.removeToken(refreshToken);
         }
         const user = await User.findByPk(userData.id);
+        const basket = await Basket.findOne({userId: user.id})
         const userDto = new UserDto(user);
         const tokens = tokenService.generateTokens({...userDto});
         await tokenService.saveToken(userDto.id, tokens.refreshToken);
 
         return {
             ...tokens,
-            user: userDto
+            user: userDto,
+            basket: basket
         }
-    }
-
-    async getAllUsers() {
-        return await User.findAll();
     }
 }
 

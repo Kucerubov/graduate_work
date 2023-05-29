@@ -12,13 +12,15 @@ import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
-import {Link} from "react-router-dom";
-import {BASKET_ROUTE, LOGIN_ROUTE, REGISTRATION_ROUTE, SHOP_ROUTE} from "../utils/consts";
+import {Link, useNavigate} from "react-router-dom";
+import {ADMIN_ROUTE, BASKET_ROUTE, LOGIN_ROUTE, REGISTRATION_ROUTE, SHOP_ROUTE} from "../utils/consts";
 import {Context} from "../index";
 import {observer} from "mobx-react-lite";
 
 const NavBar = () => {
+
     const { store } = useContext(Context);
+    const navigate = useNavigate();
 
     const [anchorElNav, setAnchorElNav] = useState(null);
     const [anchorElUser, setAnchorElUser] = useState(null);
@@ -29,6 +31,13 @@ const NavBar = () => {
         { title: 'Profile', action: () => alert('Go to profile') },
         { title: 'Logout', action: () => store.logout() },
     ];
+
+    if (store.user.role === 'ADMIN') {
+        settings.push({
+            title: 'Admin',
+            action: () => navigate(ADMIN_ROUTE),
+        });
+    }
 
     useEffect(() => {
         async function check() {
@@ -48,7 +57,7 @@ const NavBar = () => {
             }
         }
         check();
-    }, [store.isAuth, setPages]);
+    }, [store.isAuth, setPages, store]);
 
     if (isLoading) {
         return <div>Loading...</div>;
