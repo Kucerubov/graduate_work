@@ -1,10 +1,10 @@
 const nodemailer = require('nodemailer');
 
-const SMTP_HOST = "smtp.gmail.com";
-const SMTP_PORT = "587";
-const SMTP_USER = "graduate.work.kucerubov@gmail.com";
-const SMTP_PASSWORD = "owbvdpgutwwbttjq";
-const API_URL = "http://localhost:5000/";
+const SMTP_HOST = "***";
+const SMTP_PORT = "***";
+const SMTP_USER = "***";
+const SMTP_PASSWORD = "***";
+const API_URL = "***";
 class MailService{
     constructor() {
         this.transporter = nodemailer.createTransport({

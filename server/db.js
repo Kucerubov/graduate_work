@@ -1,9 +1,9 @@
 const {Sequelize} = require('sequelize');
-const DB_NAME = 'graduate_work';
-const DB_USER ='postgres';
-const DB_PASSWORD ='otosel45';
-const DB_HOST = 'localhost';
-const DB_PORT = '5432'
+const DB_NAME = '***';
+const DB_USER ='***';
+const DB_PASSWORD ='***';
+const DB_HOST = '***';
+const DB_PORT = '***'
 
 module.exports = new Sequelize(
     DB_NAME,
