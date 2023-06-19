@@ -4,7 +4,7 @@ const OtherService = (function () {
     function OtherService() {}
     OtherService.addTypeBrand = function (marker, name) {
         return new Promise((resolve) => {
-            resolve(requestSend('POST', `/${marker}`, {"name": name}, true))
+            resolve(requestSend('POST', `/${marker}`, {"name": name}, undefined, true))
         })
     };
     OtherService.allBrandType = function (marker) {

@@ -1,6 +1,7 @@
 import DeviceServices from "../services/DeviceServices";
 import {makeAutoObservable} from "mobx";
 import OtherService from "../services/OtherService";
+import PCAssemblyService from "../services/PCAssemblyService";
 
 export default class DeviceStore {
 
@@ -9,10 +10,24 @@ export default class DeviceStore {
     }
 
     device;
-    devices;
-
+    devices = null;
     brand = null;
     type = null;
+    PCAssembly;
+    selectType = null;
+    selectBrand = null;
+
+    setSelectBrand(selectBrand){
+        this.selectBrand = selectBrand;
+    }
+
+    setSelectType(selectType){
+        this.selectType = selectType;
+    }
+
+    setPCAssembly(PCAssembly) {
+        this.PCAssembly = PCAssembly;
+    }
 
     setBrand(brand) {
         this.brand = brand;
@@ -30,11 +45,28 @@ export default class DeviceStore {
         this.devices = devices;
     }
 
+    async getDeviceWithInfo(typeId){
+        try {
+            return await DeviceServices.DevicesInfo(typeId);
+        }catch (e) {
+            console.log(e);
+        }
+    }
 
-    async getDevices(){
+    async getPCAssembly(id){
+        try {
+            const response = await PCAssemblyService.getPCAssembly(id);
+            this.setPCAssembly(response);
+            console.log(response);
+        }catch (e) {
+            console.log(e);
+        }
+    }
+
+
+    async getDevices(brandId, typeId, limit, page){
          try {
-             const response = await DeviceServices.Devices();
-             console.log(response);
+             const response = await DeviceServices.Devices(brandId, typeId, limit, page);
              this.setDevices(response);
          } catch (e){
              console.log(e);
@@ -44,7 +76,6 @@ export default class DeviceStore {
     async getDeviceID(id) {
         try {
             const response = await DeviceServices.DeviceID(id);
-            console.log(response);
             this.setDevice(response);
         } catch (e) {
             console.log(e);
@@ -54,7 +85,6 @@ export default class DeviceStore {
     async addDevice(name, price, videoId, brandId, typeId, img, info){
         try {
             const response = await DeviceServices.addDevice(name, price, videoId, brandId, typeId, img, info);
-            console.log(info);
             console.log(response);
         }catch (e) {
             console.log(e);
@@ -71,7 +101,6 @@ export default class DeviceStore {
             if (marker === 'type'){
                 this.setType(response);
             }
-            console.log(response);
             return response;
         }catch (e) {
             console.log(e);

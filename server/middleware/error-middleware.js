@@ -12,5 +12,5 @@ module.exports = function (err, req, res, next) {
         console.log(res.getHeaders());
         console.log(res.body);
     });
-    return res.status(500).json({message: 'Непредвиденная ошибка'})
+    return res.status(500).json({message: 'An unexpected error'})
 }

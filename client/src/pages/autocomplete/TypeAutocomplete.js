@@ -18,8 +18,7 @@ const BrandAutocomplete = () => {
 
         (async () => {
             const data = await deviceStore.type;
-            console.log(data);
-            if (active) {
+            if (active && data) {
                 setOptions([...data]);
             }
         })();
@@ -27,7 +26,11 @@ const BrandAutocomplete = () => {
         return () => {
             active = false;
         };
-    }, [loading, deviceStore.type]);
+    }, [loading, deviceStore.type, deviceStore.device]);
+
+    const handleTypeSelect = (type) => {
+        deviceStore.setSelectType(type);
+    };
 
     useEffect(() => {
         if (!open) {
@@ -50,6 +53,7 @@ const BrandAutocomplete = () => {
             getOptionLabel={(option) => option.name}
             options={options}
             loading={loading}
+            onChange={(event, value) => handleTypeSelect(value)}
             renderInput={(params) => (
                 <TextField
                     {...params}

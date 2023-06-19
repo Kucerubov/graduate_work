@@ -1,4 +1,4 @@
-const {User, Basket, Token} = require('../models/models');
+const {User, Basket, PCAssembly} = require('../models/models');
 const bcrypt = require('bcrypt');
 const uuid = require('uuid');
 const mailServices = require('./mail-service');
@@ -21,6 +21,7 @@ class UserService {
 
         const user = await User.create({userName, email, password: hashPassword, activationLink, role})
         const basket = await Basket.create({userId: user.id});
+        const pc_assembly = await PCAssembly.create({userId: user.id});
         await mailServices.sendActivationMail(email, `http://localhost:5000/api/activate/${activationLink}`);
         const userDto = new UserDto(user); // id, email, isActivated, role
         const tokens = tokenService.generateTokens({...userDto});
@@ -29,6 +30,7 @@ class UserService {
         return {
             ...tokens,
             basket,
+            pc_assembly,
             user: userDto
         }
     }
@@ -45,12 +47,12 @@ class UserService {
         const user = await User.findOne({where: {email}});
 
         if(!user){
-            throw ApiError.BadRequest("Пользователь с таким email не зарегистрирован!")
+            throw ApiError.BadRequest("User with such email is not registered!")
         }
         const isPassEquals = await bcrypt.compare(password, user.password);
 
         if(!isPassEquals) {
-            throw ApiError.BadRequest('Неверный логин или пароль');
+            throw ApiError.BadRequest('Invalid login or password');
         }
 
         const basket = await Basket.findOne({userId: user.id});

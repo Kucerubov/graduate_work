@@ -21,7 +21,7 @@ const AuthService = (function () {
 
     AuthService.checkAuthentication = function () {
         return new Promise((resolve) => {
-            resolve(requestSend('GET', '/refresh',null,  true))
+            resolve(requestSend('GET', '/refresh',null,  undefined, true))
         })
     };
 

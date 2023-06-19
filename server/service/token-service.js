@@ -5,7 +5,7 @@ const {Token} = require('../models/models');
 
 class TokenService{
     generateTokens(payload){
-        const accessToken = jwt.sign(payload, JWT_ACCESS_SECRET, {expiresIn:'15m'});
+        const accessToken = jwt.sign(payload, JWT_ACCESS_SECRET, {expiresIn:'30m'});
         const refreshToken = jwt.sign(payload, JWT_REFRESH_SECRET, {expiresIn:'4d'});
         return {
             accessToken,
@@ -35,18 +35,16 @@ class TokenService{
             tokenData.refreshToken = refreshToken;
             return tokenData.save();
         }
-        return await Token.create({user: userId, refreshToken}) // return token
+        return await Token.create({user: userId, refreshToken})
     }
 
     async removeToken(refreshToken) {
-        console.log('refresh token' + refreshToken);
         return await Token.destroy({where: {refreshToken}});
     }
 
     async findToken(refreshToken) {
         return await Token.findOne({where: {refreshToken}});
     }
-
 }
 
 module.exports = new TokenService();

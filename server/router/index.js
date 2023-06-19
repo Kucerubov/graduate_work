@@ -1,8 +1,8 @@
 const Router = require('express').Router;
 const userController = require('../controllers/user-controller');
+const assemblyController = require('../controllers/assembly_controller')
 const router = new Router();
 const {body} = require('express-validator');
-const authMiddleware = require('../middleware/auth-middleware');
 
 const deviceRouter = require('./deviceRouter');
 const typeRouter = require('./typeRouter');
@@ -21,6 +21,7 @@ router.post('/registration',
     userController.registration
 );
 
+router.get('/assembly/:id', assemblyController.getAssembly);
 router.post('/login', userController.login);
 router.post('/logout', userController.logout);
 router.get('/activate/:link', userController.activate);

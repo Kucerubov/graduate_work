@@ -1,13 +1,13 @@
-import React, {useContext, useEffect} from 'react';
-import {Autocomplete, CircularProgress} from "@mui/material";
-import TextField from "@mui/material/TextField";
-import {Context} from "../../index";
+import React, { useContext, useEffect } from 'react';
+import { Autocomplete, CircularProgress } from '@mui/material';
+import TextField from '@mui/material/TextField';
+import { Context } from '../../index';
 
 const BrandAutocomplete = () => {
     const [open, setOpen] = React.useState(false);
     const [options, setOptions] = React.useState([]);
     const loading = open && options.length === 0;
-    const {deviceStore} = useContext(Context);
+    const { deviceStore } = useContext(Context);
 
     useEffect(() => {
         let active = true;
@@ -18,8 +18,7 @@ const BrandAutocomplete = () => {
 
         (async () => {
             const data = await deviceStore.brand;
-            console.log(data);
-            if (active) {
+            if (active && data) {
                 setOptions([...data]);
             }
         })();
@@ -27,13 +26,17 @@ const BrandAutocomplete = () => {
         return () => {
             active = false;
         };
-    }, [loading, deviceStore.brand]);
+    }, [loading, deviceStore.brand, deviceStore.device]);
 
     useEffect(() => {
         if (!open) {
             setOptions([]);
         }
     }, [open]);
+
+    const handleBrandSelect = (brand) => {
+        deviceStore.setSelectBrand(brand);
+    };
 
     return (
         <Autocomplete
@@ -50,6 +53,7 @@ const BrandAutocomplete = () => {
             getOptionLabel={(option) => option.name}
             options={options}
             loading={loading}
+            onChange={(event, value) => handleBrandSelect(value)}
             renderInput={(params) => (
                 <TextField
                     {...params}

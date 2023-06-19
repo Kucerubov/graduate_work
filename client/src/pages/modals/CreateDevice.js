@@ -5,31 +5,21 @@ import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
-import {Autocomplete, Input, Modal, Paper} from '@mui/material';
+import {Autocomplete, Input, Modal} from '@mui/material';
 import { observer } from 'mobx-react-lite';
 import Grid from '@mui/material/Grid';
-import { styled} from '@mui/material/styles';
-import {values} from "mobx";
 
 const style = {
     position: 'absolute',
     top: '50%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
-    width: 400,
+    width: 700,
     bgcolor: 'background.paper',
     border: '2px solid #fff',
     boxShadow: 24,
     p: 4,
 };
-
-const Item = styled(Paper)(({ theme }) => ({
-    backgroundColor: theme.palette.mode === 'white' ? '#1A2027' : '#fff',
-    ...theme.typography.body2,
-    padding: theme.spacing(1),
-    textAlign: 'center',
-    color: theme.palette.text.secondary,
-}));
 
 const CreateDevice = ({ show, onHide }) => {
     const { deviceStore } = useContext(Context);
@@ -73,7 +63,7 @@ const CreateDevice = ({ show, onHide }) => {
 
     const handleSubmit = async () => {
         try {
-            console.log(brand, type);
+            console.log(videoId);
             const data = await deviceStore.addDevice(name, price, videoId, brand, type, img, info);
             if (data) {
                 onHide();
@@ -92,6 +82,7 @@ const CreateDevice = ({ show, onHide }) => {
             aria-describedby="keep-mounted-modal-description"
         >
             <Box sx={style}>
+                <Box sx={{ maxHeight: '80vh', overflowY: 'auto' }}>
                 <Typography variant="h6" component="h2" sx={{ mb: 2 }}>
                     Add Device
                 </Typography>
@@ -128,7 +119,25 @@ const CreateDevice = ({ show, onHide }) => {
                     autoComplete="text"
                     autoFocus
                 />
-                <Input type="file" accept="image/*" onChange={handleImageUpload} sx={{ mb: 2 }} />
+                <label htmlFor="uploadbtn" className="uploadButton">
+                    <Button variant="contained" component="span">
+                        Upload file
+                    </Button>
+                    <div></div>
+                    <input
+                        style={{ opacity: 0, zIndex: -1 }}
+                        multiple
+                        type="file"
+                        name="upload"
+                        id="uploadbtn"
+                        onChange={(event) => {
+                            document.querySelector('.uploadButton div').innerHTML = Array.from(event.target.files)
+                                .map((f) => f.name)
+                                .join('<br />');
+                            handleImageUpload(event);
+                        }}
+                    />
+                </label>
                 <Stack spacing={1} sx={{ width: 300, mb: 2 }}>
                     <Autocomplete
                         {...typeProps}
@@ -147,7 +156,7 @@ const CreateDevice = ({ show, onHide }) => {
                     Add new info
                 </Button>
                 {info.map((i) => (
-                    <Box sx={{ flexGrow: 1}} key={i.number} mb={2}>
+                    <Box sx={{ flexGrow: 1, display: 'flex', alignItems: 'center'}} key={i.number} mb={2}>
                         <Grid container spacing={3}>
                             <Grid item xs={4}>
                                 <TextField
@@ -195,6 +204,7 @@ const CreateDevice = ({ show, onHide }) => {
                     <Button onClick={handleSubmit} variant="outlined" color="primary">
                         Add
                     </Button>
+                </Box>
                 </Box>
             </Box>
         </Modal>

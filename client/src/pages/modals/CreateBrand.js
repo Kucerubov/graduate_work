@@ -45,7 +45,7 @@ const CreateBrand = ({show, onHide}) => {
             >
                 <Box  sx={style}>
                     <Typography variant="h6" component="h2">
-                        Добавить бренд
+                        Add Brand
                     </Typography>
                     <TextField
                         onChange={(event) => setBrand(event.target.value)}

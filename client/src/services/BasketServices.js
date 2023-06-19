@@ -2,9 +2,9 @@ import requestSend from "../http/index";
 
 const BasketServices = (function () {
     function BasketServices() {}
-    BasketServices.addBasket = function () {
+    BasketServices.addBasket = function (basketId, deviceId) {
         return new Promise((resolve) => {
-            resolve(requestSend('POST', '/add-basket', null))
+            resolve(requestSend('POST', '/add-basket', {basketId: basketId, deviceId: deviceId}))
         })
     };
     BasketServices.Basket = function (id) {

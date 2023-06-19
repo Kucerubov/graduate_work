@@ -13,7 +13,14 @@ import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
 import {Link, useNavigate} from "react-router-dom";
-import {ADMIN_ROUTE, BASKET_ROUTE, LOGIN_ROUTE, REGISTRATION_ROUTE, SHOP_ROUTE} from "../utils/consts";
+import {
+    ADMIN_ROUTE,
+    BASKET_ROUTE,
+    LOGIN_ROUTE,
+    PC_ASSEMBLY_ROUTER,
+    REGISTRATION_ROUTE,
+    SHOP_ROUTE
+} from "../utils/consts";
 import {Context} from "../index";
 import {observer} from "mobx-react-lite";
 
@@ -46,7 +53,7 @@ const NavBar = () => {
                     await store.checkAuth();
                 }
                 if (store.isAuth) {
-                    setPages([{ title: 'Shop', link: SHOP_ROUTE }, { title: 'Basket', link: BASKET_ROUTE }]);
+                    setPages([{ title: 'Shop', link: SHOP_ROUTE }, { title: 'Basket', link: BASKET_ROUTE }, { title: 'PC Assembly', link: PC_ASSEMBLY_ROUTER + `/${store.user.id}` }]);
                 } else {
                     setPages([{ title: 'Shop', link: SHOP_ROUTE }]);
                 }

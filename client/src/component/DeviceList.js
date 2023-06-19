@@ -9,7 +9,6 @@ function DeviceList() {
     const { deviceStore } = useContext(Context);
     const [itemsPerRow, setItemsPerRow] = useState(3); // количество элементов в строке
 
-
     useEffect(() => {
         const handleResize = () => {
             if (window.innerWidth < 600) {
@@ -17,7 +16,7 @@ function DeviceList() {
             } else if (window.innerWidth < 960) {
                 setItemsPerRow(2);
             } else {
-                setItemsPerRow(3);
+                setItemsPerRow(4);
             }
         };
 
@@ -26,7 +25,7 @@ function DeviceList() {
         window.addEventListener("resize", handleResize);
 
         return () => window.removeEventListener("resize", handleResize);
-    }, []);
+    }, [deviceStore.devices]);
 
 
     const groupedDevices = deviceStore.devices?.rows.reduce(

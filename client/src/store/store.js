@@ -12,11 +12,16 @@ export default class Store {
     user = {};
     isAuth = false;
 
-    basket;
+    basket = {};
+    deviceInBasket = {};
+
+    setDeviceInBasket(deviceInBasket){
+        this.deviceInBasket = deviceInBasket;
+        console.log(deviceInBasket);
+    }
 
     setUser(user) {
         this.user = user;
-        console.log(user);
     }
 
     setAuth(auth){
@@ -25,6 +30,7 @@ export default class Store {
 
     setBasket(basket){
         this.basket = basket;
+        console.log(basket);
     }
 
 
@@ -79,6 +85,7 @@ export default class Store {
     async openBasket () {
         try {
             const response = await BasketServices.Basket(this.basket);
+            this.setDeviceInBasket(response);
             console.log(response);
         }catch (e) {
             console.log(e);
@@ -91,6 +98,15 @@ export default class Store {
             console.log(response);
             return response;
         }catch (e){
+            console.log(e);
+        }
+    }
+
+    async addDeviceInBasket(deviceId){
+        try {
+            const response = BasketServices.addBasket(this.basket, deviceId);
+            console.log(response);
+        }catch (e) {
             console.log(e);
         }
     }

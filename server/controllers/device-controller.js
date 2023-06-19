@@ -1,16 +1,16 @@
 const uuid = require('uuid');
 const path = require('path');
-const {Device, DeviceInfo} = require("../models/models");
+const {Device, DeviceInfo, Type} = require("../models/models");
 const ApiError = require('../exception/api-error');
 class DeviceController {
     async create(req, res, next) {
         try {
-            let {name, price, brandId, typeId, info} = req.body;
+            let {name, price, brandId, typeId, info, videoId} = req.body;
             const {img} = req.files;
             let fileName = `${uuid.v4()}.jpg`;
             await img.mv(path.resolve(__dirname, '..', 'static', fileName));
-
-            const device = await Device.create({name, price, img: fileName, brandId, typeId});
+            console.log(videoId);
+            const device = await Device.create({name, price, img: fileName, brandId, typeId, videoID: videoId});
 
             if(info){
                 console.log(info.string);
@@ -54,6 +54,20 @@ class DeviceController {
             next(e)
         }
     }
+
+    async getAllWithInfo(req, res, next) {
+        try {
+            const {typeId} = req.query
+            const devices = await Device.findAll({
+                where: {typeId},
+                include: [{ model: DeviceInfo, as: 'info' }],
+            });
+            res.json(devices);
+        } catch (e) {
+            next(e);
+        }
+    }
+
 
     async getOne (req, res, next) {
         try {

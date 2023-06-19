@@ -30,6 +30,7 @@ const Device = sequelize.define('device', {
     price: {type: DataTypes.INTEGER, allowNull: false},
     rating: {type: DataTypes.INTEGER, defaultValue: 0},
     img: {type: DataTypes.STRING, allowNull: false},
+    videoID: {type: DataTypes.STRING, allowNull: false}
 })
 
 const Type = sequelize.define('type', {
@@ -57,8 +58,22 @@ const TypeBrand = sequelize.define('type-brand', {
     id: {type: DataTypes.INTEGER,  primaryKey: true, autoIncrement: true}
 })
 
+const PCAssembly = sequelize.define('pc_assembly', {
+    id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
+    processor: {type: DataTypes.INTEGER, allowNull: true},
+    mother_board: {type: DataTypes.INTEGER, allowNull: true},
+    memory_module: {type: DataTypes.INTEGER, allowNull: true},
+    living_block: {type: DataTypes.INTEGER, allowNull: true},
+    ssd_disk: {type: DataTypes.INTEGER, allowNull: true},
+    hdd_disk: {type: DataTypes.INTEGER, allowNull: true},
+    cooling_system: {type: DataTypes.INTEGER, allowNull: true}
+})
+
 User.hasOne(Token)
 Token.belongsTo(User)
+
+User.hasOne(PCAssembly)
+PCAssembly.belongsTo(User)
 
 User.hasOne(Basket)
 Basket.belongsTo(User)
@@ -97,5 +112,6 @@ module.exports = {
     Brand,
     Rating,
     Basket,
-    BasketDevice
+    BasketDevice,
+    PCAssembly
 }

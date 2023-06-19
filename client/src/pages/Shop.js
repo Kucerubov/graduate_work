@@ -7,6 +7,7 @@ import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
 import {Context} from "../index";
 import {useLocation} from "react-router-dom";
+import {CircularProgress} from "@mui/material";
 
 const Shop = () => {
 
@@ -20,15 +21,23 @@ const Shop = () => {
             const fetchData = async () => {
                 await deviceStore.allBrandType('type');
                 await deviceStore.allBrandType('brand');
-                await deviceStore.getDevices();
-                setIsLoading(false);
             };
             fetchData();
         }
-    });
+    }, [deviceStore.selectType, deviceStore.selectBrand]);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            await deviceStore.getDevices(deviceStore?.selectBrand?.id, deviceStore?.selectType?.id);
+            setIsLoading(false);
+        };
+        fetchData();
+    }, [deviceStore.selectType, deviceStore.selectBrand])
 
     if (isLoading) {
-        return <div>Loading...</div>;
+        return <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+            <CircularProgress />
+        </div>;
     }
 
     return (
@@ -50,5 +59,7 @@ const Shop = () => {
         </>
     );
 };
+
+
 
 export default observer(Shop);
